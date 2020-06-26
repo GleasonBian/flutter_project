@@ -18,7 +18,9 @@ class _TabNavigatorState extends State<TabNavigator> {
   final _activeColor = Colors.blue;
   // 当前页面
   int _currentIndex = 0;
+  // 页面控制器
   final  PageController _controller = PageController (
+    // 初始页面
     initialPage: 0,
   );
   @override
