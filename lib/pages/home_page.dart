@@ -22,25 +22,31 @@ class _HomePageState extends State<HomePage> {
     ];
     // TODO: implement build
     return Scaffold (
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              height: 160,
-              child: Swiper(
-                itemCount: _imageUrls.length ,// 图片个数
-                autoplay: true, // 自动播放
-                itemBuilder: (BuildContext context,int index){
-                  return Image.network(
-                    _imageUrls[index],
-                    fit: BoxFit.fill,
-                  );
-                },
-                pagination: SwiperPagination(),
-              ),
+      // 移除顶部边距
+      body: MediaQuery.removePadding(
+        removeTop: true,
+        context: context, child: ListView(
+        children: [
+          Container(
+            height: 160,
+            child: Swiper(
+              itemCount: _imageUrls.length ,// 图片个数
+              autoplay: true, // 自动播放
+              itemBuilder: (BuildContext context,int index){
+                return Image.network(
+                  _imageUrls[index],
+                  fit: BoxFit.fill,
+                );
+              },
+              pagination: SwiperPagination(),
             ),
-          ],
-        ),
+          ),
+          Container(
+            height: 800,
+            child: ListTile(title: Text('haha'),),
+          ),
+        ],
+      )
       )
     );
   }
