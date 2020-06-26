@@ -13,6 +13,10 @@ class _HomePageState extends State<HomePage> {
   final  PageController _controller = PageController (
     initialPage: 0,
   );
+  _onScroll(offset) {
+    // offset 滚动距离
+    print('offset:$offset');
+  }
   @override
   Widget build(BuildContext context) {
     List _imageUrls = [
@@ -25,28 +29,40 @@ class _HomePageState extends State<HomePage> {
       // 移除顶部边距
       body: MediaQuery.removePadding(
         removeTop: true,
-        context: context, child: ListView(
-        children: [
-          Container(
-            height: 160,
-            child: Swiper(
-              itemCount: _imageUrls.length ,// 图片个数
-              autoplay: true, // 自动播放
-              itemBuilder: (BuildContext context,int index){
-                return Image.network(
-                  _imageUrls[index],
-                  fit: BoxFit.fill,
-                );
-              },
-              pagination: SwiperPagination(),
+        context: context,
+          // 添加列表滚动监听
+          child: NotificationListener(
+            // ignore: missing_return
+            onNotification: (scrollNotification ){
+              // 排除无用监听 滚动监听通知 && 监听滚动元素过滤  当 第0个元素ListView的时候触发监听
+              if(scrollNotification is ScrollUpdateNotification && scrollNotification.depth == 0) {
+                // 滚动 且是列表滚动的时候
+                _onScroll(scrollNotification.metrics.pixels);
+              }
+            },
+            child: ListView(
+              children: [
+                Container(
+                  height: 160,
+                  child: Swiper(
+                    itemCount: _imageUrls.length ,// 图片个数
+                    autoplay: true, // 自动播放
+                    itemBuilder: (BuildContext context,int index){
+                      return Image.network(
+                        _imageUrls[index],
+                        fit: BoxFit.fill,
+                      );
+                    },
+                    pagination: SwiperPagination(),
+                  ),
+                ),
+                Container(
+                  height: 800,
+                  child: ListTile(title: Text('haha'),),
+                ),
+              ],
             ),
-          ),
-          Container(
-            height: 800,
-            child: ListTile(title: Text('haha'),),
-          ),
-        ],
-      )
+          )
       )
     );
   }
