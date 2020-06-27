@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'demo/Refresh.dart';
 import 'navigator/tab_navigator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(MyApp());
+  runApp(Refresh());
 }
 
 class MyApp extends StatefulWidget {
@@ -14,7 +16,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // 请求数据结果
   String showResult = '';
+  // 演示 使用本地存储 shared_preference
+  String countString = '';
+  String localCount = '';
 
   Future<CommonModel> fetchPost() async {
     var response = await http.get(
@@ -65,6 +71,7 @@ class _MyAppState extends State<MyApp> {
                         Text('statusBarColor:${snapshot.data.statusBarColor}'),
                         Text('title: ${snapshot.data.title}'),
                         Text('title: ${snapshot.data.url}'),
+
                       ],
                     );
                   }
@@ -72,6 +79,21 @@ class _MyAppState extends State<MyApp> {
             }),
       ),
     );
+  }
+  _incrementCounter() async{
+    // 实例化 SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      countString = countString + "1";
+    });
+    int counter = (prefs.getInt('counter') ?? 0) + 1;
+    await prefs.setInt('counter',counter);
+  }
+  _getCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      localCount = prefs.getInt('counter'.toString()) as String;
+    });
   }
 }
 
